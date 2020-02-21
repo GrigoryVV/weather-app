@@ -8,6 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Typography, Button } from '@material-ui/core';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import { observer } from 'mobx-react';
+import citiesStore from './../../../stores/citiesStore'
 
 const useStyles = makeStyles({
     table: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles({
     createData('Berlin', 'DE', 10.0),
   ];
 
-export default function Favorites(props) {
+const Favorites = observer(props => {
 
     const classes = useStyles();
 
@@ -62,4 +64,6 @@ export default function Favorites(props) {
             </Table>
         </TableContainer>
     )
-}
+});
+
+export default Favorites
