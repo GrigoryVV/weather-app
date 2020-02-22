@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import CountrySelect from './CountrySelect/CountrySelect';
+import citiesStore from './../../../stores/citiesStore';
+import { observer } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -17,9 +19,14 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-export default function CityFinder(props) {
+const CityFinder = observer((props) => {
 
     const classes = useStyles();
+
+    const handleSubmit = () => {
+        citiesStore.getCityWeather();
+        citiesStore.changeCityName('');
+    }
 
     return (
         <div>
@@ -28,11 +35,20 @@ export default function CityFinder(props) {
             </Typography>
             <form className={classes.form} noValidate autoComplete="off">
                 <CountrySelect/>
-                <TextField id="city" label="Enter a city name" variant="outlined" />
-                <Button variant="contained" color="primary">
+                <TextField 
+                    id="city" 
+                    label="Enter a city name" 
+                    variant="outlined" 
+                    value={citiesStore.cityName}
+                    onChange={(e) => citiesStore.changeCityName(e.target.value)}
+                />
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Add to favorites
                 </Button>
             </form>
         </div>
     );
-}
+});
+
+
+export default CityFinder;

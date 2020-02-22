@@ -17,21 +17,16 @@ const useStyles = makeStyles({
     },
   });
   
-  function createData(city, countryCode, temperature) {
-    return { city, countryCode, temperature };
-  }
-  
-  const rows = [
-    createData('Novosibirsk', 'RU', -6.0),
-    createData('London', 'GB', 9.0),
-    createData('New York', 'US', 16.0,),
-    createData('Totonto', 'CA', 3.7),
-    createData('Berlin', 'DE', 10.0),
-  ];
 
 const Favorites = observer(props => {
 
     const classes = useStyles();
+
+    if (citiesStore.favoritesCities.length === 0) {
+        return (
+            <Typography variant='h5'>Please add cities to your favorites</Typography>
+        )
+    }
 
     return (
         <TableContainer component='div'>
@@ -46,15 +41,15 @@ const Favorites = observer(props => {
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                {rows.map(row => (
-                    <TableRow key={row.city + row.countryCode}>
+                {citiesStore.favoritesCities.map(city => (
+                    <TableRow key={city.city + city.countryCode}>
                     <TableCell component="th" scope="row">
-                        {row.city}
+                        {city.city}
                     </TableCell>
-                    <TableCell>{row.countryCode}</TableCell>
-                    <TableCell align="right">{row.temperature}</TableCell>
+                    <TableCell>{city.countryCode}</TableCell>
+                    <TableCell align="right">{city.weather.temp}</TableCell>
                     <TableCell align="center">
-                        <Button color="secondary">
+                        <Button color="secondary" onClick={() => citiesStore.removeCity(city.city, city.countryCode)}>
                             <DeleteRoundedIcon/>
                         </Button>
                     </TableCell>

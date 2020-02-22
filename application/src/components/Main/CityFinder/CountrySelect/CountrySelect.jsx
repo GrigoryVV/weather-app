@@ -2,6 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
+import citiesStore from './../../../../stores/citiesStore';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
@@ -21,22 +22,32 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CountrySelect() {
+export default function CountrySelect(props) {
   const classes = useStyles();
+
+  const handleCountryChoice = (e, value, reason) => {
+    if (reason === "reset" && value !== "") {
+      let countryData = value.split(', ');
+      citiesStore.setCountryData(countryData[0], countryData[1]);
+    } else {
+      citiesStore.setCountryData('', '');
+    }
+  }
 
   return (
     <Autocomplete
+      onInputChange={handleCountryChoice}
       id="country-select-demo"
       options={countries}
       classes={{
         option: classes.option,
       }}
       autoHighlight
-      getOptionLabel={option => option.label}
+      getOptionLabel={option => `${option.label}, ${option.code}`}
       renderOption={option => (
         <React.Fragment>
           <span>{countryToFlag(option.code)}</span>
-          {option.label} ({option.code})
+          {option.label}, {option.code}
         </React.Fragment>
       )}
       renderInput={params => (
@@ -47,7 +58,7 @@ export default function CountrySelect() {
           fullWidth
           inputProps={{
             ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
+            autoComplete: 'off', // disable autocomplete and autofill
           }}
         />
       )}
