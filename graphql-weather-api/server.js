@@ -7,6 +7,7 @@ import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLNonNull } from 
 import weatherType from './WeatherType';
 import { fetchForecast, fetchWeather } from './helper'
 import oneDayWeatherType from './OneDayWeatherType';
+import cors from 'cors'
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -47,6 +48,8 @@ const schema = new GraphQLSchema({
 });
 
 const app = express();
+
+app.use(cors())
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,
