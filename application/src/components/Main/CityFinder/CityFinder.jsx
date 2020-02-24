@@ -1,11 +1,10 @@
-import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import React, { useState } from 'react';
+import { Typography, Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CountrySelect from './CountrySelect/CountrySelect';
-import citiesStore from './../../../stores/citiesStore';
 import { observer } from 'mobx-react';
+import { StoreContext } from '../../..';
+
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -22,10 +21,16 @@ const useStyles = makeStyles(theme => ({
 const CityFinder = observer((props) => {
 
     const classes = useStyles();
+    const store = React.useContext(StoreContext)
+    const [cityName, setCityName] = useState('');
+    const [country, setCountry] = useState('');
 
-    const handleSubmit = () => {
-        citiesStore.getCityWeather();
-        citiesStore.changeCityName('');
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const countryCode = country ? country.split(', ')[1] : '';
+
+        store.getCityWeather(cityName, countryCode);
+        setCityName('');
     }
 
     return (
@@ -33,16 +38,17 @@ const CityFinder = observer((props) => {
             <Typography variant="h5" gutterBottom>
                 Add city to your favorites
             </Typography>
-            <form className={classes.form} noValidate autoComplete="off">
-                <CountrySelect/>
+            <form className={classes.form} autoComplete="off" onSubmit={handleSubmit}>
+                <CountrySelect country={country} setCountry={setCountry}/>
                 <TextField 
                     id="city" 
                     label="Enter a city name" 
                     variant="outlined" 
-                    value={citiesStore.cityName}
-                    onChange={(e) => citiesStore.changeCityName(e.target.value)}
+                    required={true}
+                    value={cityName}
+                    onChange={(e) => setCityName(e.target.value)}
                 />
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                <Button variant="contained" color="primary" type="submit">
                     Add to favorites
                 </Button>
             </form>

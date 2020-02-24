@@ -14,7 +14,7 @@ const schema = new GraphQLSchema({
     name: 'RootQueryType',
     description: 'The root of all... queries',    
     fields: {
-      getForcast: {
+      getForecast: {
         type: weatherType,
         args: {
           city: {

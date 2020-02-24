@@ -2,7 +2,6 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
-import citiesStore from './../../../../stores/citiesStore';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
@@ -26,11 +25,8 @@ export default function CountrySelect(props) {
   const classes = useStyles();
 
   const handleCountryChoice = (e, value, reason) => {
-    if (reason === "reset" && value !== "") {
-      let countryData = value.split(', ');
-      citiesStore.setCountryData(countryData[0], countryData[1]);
-    } else {
-      citiesStore.setCountryData('', '');
+    if (reason === 'reset' || reason === 'clear') {
+      props.setCountry(value);
     }
   }
 
